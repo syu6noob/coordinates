@@ -1,4 +1,13 @@
-name: coordinates
-version: '1.0-SNAPSHOT'
+name: Coordinates
 main: com.github.syu6noob.coordinates.Coordinates
+version: 1.0
 api-version: '1.21'
+commands:
+  coords:
+    description: "Show or hide your coordinates and world time."
+    usage: /coords show <actionbar|title|scoreboard> OR /coords hide
+    permission: coordinates.use
+permissions:
+  coordinates.use:
+    description: "Use the coords command."
+    default: true
