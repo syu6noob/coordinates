@@ -1,0 +1,4 @@
+name: coordinates
+version: '1.0-SNAPSHOT'
+main: com.github.syu6noob.coordinates.Coordinates
+api-version: '1.21'
