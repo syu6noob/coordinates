@@ -1,11 +1,14 @@
 name: Coordinates
 main: com.github.syu6noob.coordinates.Coordinates
-version: 1.0
+version: '${version}'
+description: Displays your coordinates and the current world time in the action bar or sidebar.
+author: syu6noob
+website: https://github.com/syu6noob/coordinates
 api-version: '1.21'
 commands:
   coords:
     description: "Show or hide your coordinates and world time."
-    usage: /coords show <actionbar|title|scoreboard> OR /coords hide
+    usage: "/coords show <actionbar|scoreboard> | /coords hide"
     permission: coordinates.use
 permissions:
   coordinates.use:

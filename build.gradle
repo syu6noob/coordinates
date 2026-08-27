@@ -45,6 +45,10 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
+tasks.named('jar') {
+    archiveFileName = 'Coordinates.jar'
+}
+
 processResources {
     def props = [version: version]
     inputs.properties props
