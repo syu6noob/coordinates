@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag (for example, v1.0.0)
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -12,10 +18,14 @@ jobs:
   release:
     name: Build and publish release
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          ref: ${{ env.RELEASE_TAG }}
 
       - name: Set up Java 21
         uses: actions/setup-java@v5
@@ -26,10 +36,13 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
 
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
       - name: Verify release version
         shell: bash
         run: |
-          tag_version="${GITHUB_REF_NAME#v}"
+          tag_version="${RELEASE_TAG#v}"
           project_version="$(./gradlew properties --no-daemon -q | sed -n 's/^version: //p')"
           if [[ "$tag_version" != "$project_version" ]]; then
             echo "Tag version ($tag_version) does not match Gradle version ($project_version)."
@@ -43,8 +56,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          gh release create "${{ github.ref_name }}"
+          gh release create "$RELEASE_TAG"
           build/libs/Coordinates.jar
           --verify-tag
           --generate-notes
-          --title "Coordinates ${{ github.ref_name }}"
+          --title "Coordinates $RELEASE_TAG"
